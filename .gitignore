@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Move build directory
+build
+storage/
+!narwhal/storage
