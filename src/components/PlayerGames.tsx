@@ -1,27 +1,29 @@
 import { useEffect, useState } from "react";
 import {
+  GetObjectDataResponse,
   JsonRpcProvider,
   Network,
   SuiEventEnvelope,
   SuiEventFilter,
+  SuiMoveObject,
+  SuiObject,
   TransactionQuery,
 } from "@mysten/sui.js";
 import { useWallet } from "@suiet/wallet-kit";
-import React from "react";
 import Board from "../interfaces/Board";
 import GameTable from "./GameTable";
 import { useBoardStore } from "../store/store";
 
 const PlayerGames = () => {
-  const [playerGames, setPlayerGames] = useState<any>();
   const wallet = useWallet();
   const setGames = useBoardStore((state) => state.setGames);
+  const setFinishedGames = useBoardStore((state) => state.setFinishedGames);
   const setFetchingGames = useBoardStore((state) => state.setFetchingGames);
   const fetchingGames = useBoardStore((state) => state.fetchingGames);
   const provider = new JsonRpcProvider(Network.DEVNET);
   const MoveFunction: TransactionQuery = {
     MoveFunction: {
-      package: "0xad5831fe358a89d487648c2c52f6cad0560767fa",
+      package: import.meta.env.VITE_GAME_PACKAGE_ADDRESS as string,
       module: "shared_tic_tac_toe",
       function: "create_game",
     },
@@ -31,6 +33,7 @@ const PlayerGames = () => {
     let transactions = [];
     let objects = [];
     let playerGames = [];
+    let playerFinishedGames = [];
     setFetchingGames(true);
     const data = await provider.getTransactions(MoveFunction);
     for (let item of data.data) {
@@ -38,17 +41,17 @@ const PlayerGames = () => {
     }
 
     for (let item of transactions) {
-      const transactionalData = await provider.getTransactionWithEffects(item);
+      const transactionalData: any = await provider.getTransactionWithEffects(
+        item
+      );
       if (transactionalData.effects.events) {
-        // @ts-ignore
         objects.push(transactionalData.effects.events[1].newObject.objectId);
       }
     }
 
     for (let object of objects) {
-      const objectData = await provider.getObject(object);
+      const objectData: any = await provider.getObject(object);
       if (objectData) {
-        // @ts-ignore
         const board: Board = objectData.details.data.fields;
         if (
           board.game_status === 0 &&
@@ -56,27 +59,36 @@ const PlayerGames = () => {
             board.x_address === wallet.account?.address)
         ) {
           playerGames.push(board);
+        } else {
+          playerFinishedGames.push(board);
         }
       }
     }
+    setFinishedGames(playerFinishedGames);
     setGames(playerGames);
     setFetchingGames(false);
   }
 
   return (
-    <>
-      {fetchingGames ? (
-        <button className="btn btn-accent loading">Fetching</button>
-      ) : (
-        <button onClick={() => fetchGames()} className="btn btn-accent">
-          Get Games
-        </button>
-      )}
-
-      <div className="flex items-center justify-center w-full overflow-x-auto mb-20">
-        <GameTable />
+    <div className="container p-20 mx-auto flex flex-col gap-5">
+      <div className="w-1/3">
+        {fetchingGames ? (
+          <button className="btn btn-accent loading">Fetching</button>
+        ) : (
+          <button onClick={() => fetchGames()} className="btn btn-accent">
+            Get Games
+          </button>
+        )}
       </div>
-    </>
+      <h1 className="text-center text-4xl font-bold">Open Games</h1>
+      <div className="flex items-center justify-center w-full overflow-x-auto mb-20">
+        <GameTable option={0} />
+      </div>
+      <h1 className="text-center text-4xl font-bold">Finished Games</h1>
+      <div className="flex items-center justify-center w-full overflow-x-auto mb-20">
+        <GameTable option={1} />
+      </div>
+    </div>
   );
 };
 

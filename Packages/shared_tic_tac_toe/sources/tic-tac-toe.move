@@ -42,6 +42,7 @@ module 0x0::shared_tic_tac_toe {
     const EInvalidLocation: u64 = 2;
     /// The cell to place a new mark at is already oocupied.
     const ECellOccupied: u64 = 3;
+    const EInvalidGameState: u64 = 4;
 
     struct TicTacToe has key {
         id: UID,
@@ -59,6 +60,12 @@ module 0x0::shared_tic_tac_toe {
     struct GameEndEvent has copy, drop {
         // The Object ID of the game object
         game_id: ID,
+    }
+
+    struct TrophyEvent has copy, drop {
+        trophy_id: ID,
+        game: ID,
+        winner: address,
     }
 
     /// `x_address` and `o_address` are the account address of the two players.
@@ -99,11 +106,20 @@ module 0x0::shared_tic_tac_toe {
         if (game.game_status != IN_PROGRESS) {
             // Notify the server that the game ended so that it can delete the game.
             event::emit(GameEndEvent { game_id: object::id(game) });
-            if (game.game_status == X_WIN) {
-                transfer::transfer( Trophy { id: object::new(ctx) }, game.x_address);
-            } else if (game.game_status == O_WIN) {
-                transfer::transfer( Trophy { id: object::new(ctx) }, game.o_address);
-            }
+            create_and_send_trophy(game, ctx)
+        }
+    }
+
+    fun create_and_send_trophy(game: &mut TicTacToe, ctx: &mut TxContext) {
+        if(game.game_status != DRAW){
+            let trophy = Trophy { id: object::new(ctx) };
+            let winner = if(game.game_status == X_WIN) {game.x_address} else {game.o_address};
+            event::emit(TrophyEvent { 
+                trophy_id: object::uid_to_inner(&trophy.id),
+                game: object::id(game),
+                winner,
+                });
+            transfer::transfer(trophy, winner);
         }
     }
 

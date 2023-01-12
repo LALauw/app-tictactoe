@@ -18,7 +18,7 @@ const TileRenderer = ({
 
   if (number === 0) {
     return (
-      <div className="btn btn-accent btn-disabled w-40 h-40 text-5xl font-bold text-opacity-100">
+      <div className="btn btn-accent btn-disabled w-20 h-20 lg:w-40 lg:h-40 text-5xl font-bold text-opacity-100">
         X
       </div>
     );
@@ -26,7 +26,7 @@ const TileRenderer = ({
 
   if (number === 1) {
     return (
-      <div className="btn btn-accent btn-disabled w-40 h-40 text-5xl font-bold text-opacity-100">
+      <div className="btn btn-accent btn-disabled w-20 h-20 lg:w-40 lg:h-40 text-5xl font-bold text-opacity-100">
         O
       </div>
     );
