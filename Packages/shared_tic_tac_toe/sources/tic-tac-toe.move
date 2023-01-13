@@ -62,12 +62,14 @@ module 0x0::shared_tic_tac_toe {
         game_id: ID,
     }
 
+    /// An event I created for the server to pick up when a trophy has been given to a winner.  
     struct TrophyEvent has copy, drop {
         trophy_id: ID,
         game: ID,
         winner: address,
     }
 
+    /// An event I created for the server to pick up when game gets created.
     struct CreateGameEvent has copy, drop {
         x_address: address,
         o_address: address,
@@ -93,6 +95,7 @@ module 0x0::shared_tic_tac_toe {
             o_address: o_address,
         };
 
+        // Notify the server that a new game has been created.
         event::emit(CreateGameEvent { 
                 x_address,
                 o_address,
@@ -118,10 +121,13 @@ module 0x0::shared_tic_tac_toe {
         if (game.game_status != IN_PROGRESS) {
             // Notify the server that the game ended so that it can delete the game.
             event::emit(GameEndEvent { game_id: object::id(game) });
+            // Call the function to emit the trophy event.
             create_and_send_trophy(game, ctx)
         }
     }
 
+    /// Creates a trophy and sends it to the winner also emits the trophy event.
+    /// Custom code. 
     fun create_and_send_trophy(game: &mut TicTacToe, ctx: &mut TxContext) {
         if(game.game_status != DRAW){
             let trophy = Trophy { id: object::new(ctx) };
@@ -134,6 +140,7 @@ module 0x0::shared_tic_tac_toe {
             transfer::transfer(trophy, winner);
         }
     }
+    /// Custom code ends here.
 
     public entry fun delete_game(game: TicTacToe) {
         let TicTacToe { id, gameboard: _, cur_turn: _, game_status: _, x_address: _, o_address: _ } = game;

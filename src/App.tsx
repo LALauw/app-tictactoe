@@ -8,7 +8,6 @@ import { useBoardStore } from "./store/store";
 import GameBoard from "./components/GameBoard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import provider from "./util/SuiProvider";
 import { RenderToast } from "./util/RenderToast";
 
 function App() {
