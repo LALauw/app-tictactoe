@@ -7,6 +7,7 @@ enum status {
   mark_places = 4,
   error = 5,
   invalid_turn = 6,
+  created_game = 7,
 }
 
 const toastProps: ToastOptions = {
@@ -32,5 +33,7 @@ export const RenderToast = (status: status) => {
     return toast.error(`Error! Try Again!`, toastProps);
   } else if (status == 6) {
     return toast.warn(`It's not your turn, yet!`, toastProps);
+  } else if (status == 7) {
+    return toast.info(`Game Created!`, toastProps);
   }
 };

@@ -28,7 +28,6 @@ const Leaderboard = () => {
             import.meta.env.VITE_GAME_PACKAGE_ADDRESS +
               "::shared_tic_tac_toe::TrophyEvent"
       );
-      console.log(filteredTrophies);
       const winners: Map<string, number> = new Map();
       let newLeaderboard: WinnerObject[] = [];
       for (let winner of filteredTrophies) {
@@ -45,7 +44,6 @@ const Leaderboard = () => {
       });
       newLeaderboard.sort((a, b) => b.trophies - a.trophies);
       setLeaderboard(newLeaderboard);
-      console.log(newLeaderboard);
 
       return data;
     };

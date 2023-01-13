@@ -1,17 +1,15 @@
-import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
+import { useState } from "react";
 import "./App.css";
 import { ConnectButton } from "@suiet/wallet-kit";
 import { useWallet } from "@suiet/wallet-kit";
-import * as tweetnacl from "tweetnacl";
-import Board from "./interfaces/Board";
 import PlayerGames from "./components/PlayerGames";
 import SuiProvider from "./util/SuiProvider";
 import { useBoardStore } from "./store/store";
 import GameBoard from "./components/GameBoard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// connect to Devnet
+import provider from "./util/SuiProvider";
+import { RenderToast } from "./util/RenderToast";
 
 function App() {
   const [challengedPlayer, setChallengedPlayer] = useState("");
@@ -19,17 +17,17 @@ function App() {
   const board = useBoardStore((state) => state.board);
   const wallet = useWallet();
 
-  useEffect(() => {
-    if (!wallet.connected) return;
-    console.log("account address: ", wallet.account?.address);
-  }, [wallet]);
-
   async function handleSignAndExecuteTx() {
     if (!wallet.connected) return;
     try {
       if (wallet.account?.address! === challengedPlayer) {
-        return alert("You can't challenge yourself");
+        return alert("You can't challenge yourself!");
       }
+
+      if (challengedPlayer.length !== 42) {
+        return alert("Enter a valid address!");
+      }
+
       const resData = await wallet.signAndExecuteTransaction({
         transaction: {
           kind: "moveCall",
@@ -44,18 +42,14 @@ function App() {
           },
         },
       });
-      console.log("Creating game", resData);
+
       if (resData.effects.created) {
-        console.log("Game ID", resData.effects.created[0].reference.objectId);
         const newBoard: any = await SuiProvider.getObject(
           resData.effects.created[0].reference.objectId
         );
         setBoard(newBoard.details?.data.fields);
 
-        alert(
-          "Congrats, created a game \n ID: " +
-            resData.effects.created[0].reference.objectId
-        );
+        RenderToast(7);
       }
     } catch (e) {
       console.error("Game Creation failed", e);
@@ -76,7 +70,7 @@ function App() {
       </div>
       {wallet.account && (
         <>
-          <div className="container flex flex-col items-center justify-center lg:flex-row gap-5 p-2 lg:p-20">
+          <div className="container flex flex-col items-center justify-center lg:flex-row gap-5 p-2 ">
             <div className="w-full lg:w-1/2 flex flex-col gap-5">
               <label className="text-2xl font-bold text-pink-500">
                 Challenge a player

@@ -78,7 +78,10 @@ const PlayerGames = () => {
 
   return (
     <div className="container p-2 mx-auto flex flex-col gap-5">
-      <div className="w-1/3">
+      <div className="flex w-full md:w-1/3 gap-5 justify-center md:justify-start">
+        <label htmlFor="my-modal-4" className="btn btn-accent">
+          Leaderboard
+        </label>
         {fetchingGames ? (
           <button className="btn btn-accent loading">Fetching</button>
         ) : (

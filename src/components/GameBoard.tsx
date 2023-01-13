@@ -1,13 +1,11 @@
 import { useWallet } from "@suiet/wallet-kit";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Board from "../interfaces/Board";
 import { useBoardStore } from "../store/store";
-import SuiProvider from "../util/SuiProvider";
 import TileRenderer from "./TileRenderer";
 import TurnCalc from "./TurnCalc";
 import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
-import { toast } from "react-toastify";
 import { RenderToast } from "../util/RenderToast";
 import { SuiEventEnvelope, SuiEventFilter } from "@mysten/sui.js";
 import provider from "../util/SuiProvider";
@@ -63,11 +61,9 @@ const GameBoard = () => {
             },
           },
         });
-        console.log("Placing mark", resData);
 
         if (resData.effects.status.status === "success") {
           const newBoard = await updateBoard(board.id?.id!);
-          console.log(newBoard);
           if (!newBoard) return;
           else {
             const decision: boolean = decideWinner(
@@ -110,17 +106,12 @@ const GameBoard = () => {
             );
           })}
         </div>
-        <div className="flex flex-col gap-5">
-          <label htmlFor="my-modal-4" className="btn btn-accent">
-            Leaderboard
-          </label>
-          <button
-            className="btn btn-accent"
-            onClick={() => updateBoard(board.id?.id!)}
-          >
-            Update Board
-          </button>
-        </div>
+        <button
+          className="btn btn-accent"
+          onClick={() => updateBoard(board.id?.id!)}
+        >
+          Update Board
+        </button>
       </>
     );
   }
