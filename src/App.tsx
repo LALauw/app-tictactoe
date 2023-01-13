@@ -65,7 +65,13 @@ function App() {
   return (
     <div className="container mx-auto overflow-x-hidden">
       <div className="navbar justify-between flex flex-col lg:flex-row mb-10 mt-5 gap-4">
-        <h1 className="text-3xl lg:text-5xl font-bold">Tic-Tac-Toe</h1>
+        <div className="flex flex-col">
+          <h1 className="text-3xl lg:text-5xl font-bold">Tic-Tac-Toe</h1>
+          <h2 className="text-base lg:text-md font-bold">
+            Created by Leslie Lauw
+          </h2>
+        </div>
+
         <ConnectButton label="Connect" />
       </div>
       {wallet.account && (

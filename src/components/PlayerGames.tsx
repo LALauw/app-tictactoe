@@ -62,7 +62,12 @@ const PlayerGames = () => {
         ) {
           playerGames.push(board);
         } else {
-          playerFinishedGames.push(board);
+          if (
+            board.o_address === wallet.account?.address ||
+            board.x_address === wallet.account?.address
+          ) {
+            playerFinishedGames.push(board);
+          }
         }
       }
     }
