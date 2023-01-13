@@ -9,6 +9,8 @@ import PlayerGames from "./components/PlayerGames";
 import SuiProvider from "./util/SuiProvider";
 import { useBoardStore } from "./store/store";
 import GameBoard from "./components/GameBoard";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // connect to Devnet
 
 function App() {
@@ -62,13 +64,13 @@ function App() {
 
   return (
     <div className="container mx-auto overflow-x-hidden">
-      <div className="navbar justify-between flex mb-10 mt-5">
-        <h1 className="text-5xl font-bold">Tic-Tac-Toe</h1>
+      <div className="navbar justify-between flex flex-col lg:flex-row mb-10 mt-5 gap-4">
+        <h1 className="text-3xl lg:text-5xl font-bold">Tic-Tac-Toe</h1>
         <ConnectButton label="Connect" />
       </div>
       {wallet.account && (
         <>
-          <div className="container flex flex-col lg:flex-row gap-5 p-20">
+          <div className="container flex flex-col items-center justify-center lg:flex-row gap-5 p-2 lg:p-20">
             <div className="w-full lg:w-1/2 flex flex-col gap-5">
               <label className="text-2xl font-bold text-pink-500">
                 Challenge a player
@@ -91,6 +93,15 @@ function App() {
           <PlayerGames />
         </>
       )}
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        theme="dark"
+      />
     </div>
   );
 }

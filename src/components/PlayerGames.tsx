@@ -13,6 +13,8 @@ import { useWallet } from "@suiet/wallet-kit";
 import Board from "../interfaces/Board";
 import GameTable from "./GameTable";
 import { useBoardStore } from "../store/store";
+import FinishedGamesTable from "./FinishedGamesTable";
+import OngoingGamesTable from "./OngoingGamesTable";
 
 const PlayerGames = () => {
   const wallet = useWallet();
@@ -70,7 +72,7 @@ const PlayerGames = () => {
   }
 
   return (
-    <div className="container p-20 mx-auto flex flex-col gap-5">
+    <div className="container p-2 mx-auto flex flex-col gap-5">
       <div className="w-1/3">
         {fetchingGames ? (
           <button className="btn btn-accent loading">Fetching</button>
@@ -81,12 +83,12 @@ const PlayerGames = () => {
         )}
       </div>
       <h1 className="text-center text-4xl font-bold">Open Games</h1>
-      <div className="flex items-center justify-center w-full overflow-x-auto mb-20">
-        <GameTable option={0} />
+      <div className="overflow-x-auto flex lg:justify-center">
+        <OngoingGamesTable />
       </div>
       <h1 className="text-center text-4xl font-bold">Finished Games</h1>
-      <div className="flex items-center justify-center w-full overflow-x-auto mb-20">
-        <GameTable option={1} />
+      <div className="overflow-x-auto flex lg:justify-center mb-20">
+        <FinishedGamesTable />
       </div>
     </div>
   );

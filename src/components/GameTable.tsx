@@ -8,6 +8,7 @@ const GameTable = ({ option }: { option: number }) => {
   const finishedGames = useBoardStore((state) => state.finishedGames);
   const board = useBoardStore((state) => state.board);
   const setBoard = useBoardStore((state) => state.setBoard);
+  const setWinner = useBoardStore((state) => state.setWinner);
   const wallet = useWallet();
 
   if (games.length > 0 || finishedGames.length > 0) {
@@ -19,8 +20,8 @@ const GameTable = ({ option }: { option: number }) => {
               <th>ID</th>
               <th>Status</th>
               <th>Turn</th>
-              <th>o_address</th>
-              <th>x_address</th>
+              <th>Player O</th>
+              <th>Player X</th>
               <th>Load Board</th>
             </tr>
           </thead>
@@ -48,7 +49,10 @@ const GameTable = ({ option }: { option: number }) => {
                         </button>
                       ) : (
                         <button
-                          onClick={() => setBoard(game)}
+                          onClick={() => {
+                            setBoard(game);
+                            setWinner(false);
+                          }}
                           className="btn btn-primary btn-sm"
                         >
                           Select
@@ -61,7 +65,7 @@ const GameTable = ({ option }: { option: number }) => {
                   <tr key={index}>
                     <td>{game.id?.id}</td>
                     <td>{game.game_status}</td>
-                    <td>{TurnCalc(wallet.account?.address!, game)}</td>
+                    <td>Finished</td>
                     <td>
                       {wallet.account?.address === game.o_address
                         ? "You"
@@ -79,7 +83,10 @@ const GameTable = ({ option }: { option: number }) => {
                         </button>
                       ) : (
                         <button
-                          onClick={() => setBoard(game)}
+                          onClick={() => {
+                            setBoard(game);
+                            setWinner(true);
+                          }}
                           className="btn btn-primary btn-sm"
                         >
                           Select

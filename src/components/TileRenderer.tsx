@@ -1,3 +1,5 @@
+import { useBoardStore } from "../store/store";
+
 const TileRenderer = ({
   placeMarker,
   place,
@@ -7,11 +9,14 @@ const TileRenderer = ({
   place: number[];
   number: number;
 }) => {
+  const winner = useBoardStore((state) => state.winner);
   if (number === 2) {
     return (
       <div
         onClick={() => placeMarker(place)}
-        className="btn btn-accent w-40 h-40"
+        className={`btn btn-accent ${
+          winner ? "btn-disabled" : ""
+        } w-20 h-20 lg:w-40 lg:h-40`}
       ></div>
     );
   }

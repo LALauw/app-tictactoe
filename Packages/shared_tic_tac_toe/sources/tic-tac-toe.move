@@ -68,6 +68,12 @@ module 0x0::shared_tic_tac_toe {
         winner: address,
     }
 
+    struct CreateGameEvent has copy, drop {
+        x_address: address,
+        o_address: address,
+        game_id: ID,
+    }
+
     /// `x_address` and `o_address` are the account address of the two players.
     public entry fun create_game(x_address: address, o_address: address, ctx: &mut TxContext) {
         // TODO: Validate sender address, only GameAdmin can create games.
@@ -86,6 +92,12 @@ module 0x0::shared_tic_tac_toe {
             x_address: x_address,
             o_address: o_address,
         };
+
+        event::emit(CreateGameEvent { 
+                x_address,
+                o_address,
+                game_id: object::uid_to_inner(&game.id),
+        });
         // Make the game a shared object so that both players can mutate it.
         transfer::share_object(game);
     }

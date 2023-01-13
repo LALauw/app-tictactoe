@@ -1,8 +1,11 @@
 import { create } from "zustand";
 import Board from "../interfaces/Board";
+import WinnerObject from "../interfaces/WinnerObject";
 import SuiProvider from "../util/SuiProvider";
 
 type State = {
+  leaderboard: WinnerObject[];
+  winner: boolean;
   games: Board[];
   finishedGames: Board[];
   board: Board;
@@ -10,6 +13,8 @@ type State = {
 };
 
 type Actions = {
+  setLeaderboard: (newLeaderboard: WinnerObject[]) => void;
+  setWinner: (isWinner: boolean) => void;
   setBoard: (board: Board) => void;
   setGames: (games: Board[]) => void;
   setFinishedGames: (games: Board[]) => void;
@@ -18,10 +23,15 @@ type Actions = {
 };
 
 export const useBoardStore = create<State & Actions>((set) => ({
+  leaderboard: [],
+  winner: false,
   finishedGames: [],
   games: [],
   board: {},
   fetchingGames: false,
+  setLeaderboard: (newLeaderboard: WinnerObject[]) =>
+    set((state) => ({ leaderboard: newLeaderboard })),
+  setWinner: (isWinner: boolean) => set((state) => ({ winner: isWinner })),
   setFetchingGames: (status: boolean) =>
     set((state) => ({ fetchingGames: status })),
   setBoard: (board: Board) => set((state) => ({ board: board })),
