@@ -9,13 +9,13 @@ const TileRenderer = ({
   place: number[];
   number: number;
 }) => {
-  const winner = useBoardStore((state) => state.winner);
+  const gamestatus = useBoardStore((state) => state.gamestatus);
   if (number === 2) {
     return (
       <div
         onClick={() => placeMarker(place)}
         className={`btn btn-accent ${
-          winner ? "btn-disabled" : ""
+          gamestatus === "Ongoing" ? "" : "btn-disabled"
         } w-20 h-20 lg:w-40 lg:h-40`}
       ></div>
     );

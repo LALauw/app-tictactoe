@@ -1,15 +1,5 @@
 import { toast, ToastOptions } from "react-toastify";
 
-enum status {
-  win = 1,
-  lose = 2,
-  draw = 3,
-  mark_places = 4,
-  error = 5,
-  invalid_turn = 6,
-  created_game = 7,
-}
-
 const toastProps: ToastOptions = {
   position: "bottom-right",
   autoClose: 5000,
@@ -20,20 +10,21 @@ const toastProps: ToastOptions = {
   theme: "dark",
 };
 
-export const RenderToast = (status: status) => {
-  if (status == 1) {
-    return toast(`🎉 You won! Congrats! 🎉`, toastProps);
-  } else if (status == 2) {
+export const RenderToast = (status: number) => {
+  if (status === 1) return toast(`🎉 You won! Congrats! 🎉`, toastProps);
+
+  if (status === 2)
     return toast(`😢 You lost! Better luck next time! 😢`, toastProps);
-  } else if (status == 3) {
-    return toast(`🤝 It's a draw! 🤝`, toastProps);
-  } else if (status == 4) {
-    return toast.success(`Mark Placed!`, toastProps);
-  } else if (status == 5) {
-    return toast.error(`Error! Try Again!`, toastProps);
-  } else if (status == 6) {
-    return toast.warn(`It's not your turn, yet!`, toastProps);
-  } else if (status == 7) {
-    return toast.info(`Game Created!`, toastProps);
-  }
+
+  if (status === 3) return toast(`🤝 It's a draw! 🤝`, toastProps);
+
+  if (status === 4) return toast.success(`Mark Placed!`, toastProps);
+
+  if (status === 5) return toast.error(`Error! Try Again!`, toastProps);
+
+  if (status === 6) return toast.warn(`It's not your turn, yet!`, toastProps);
+
+  if (status === 7) return toast.info(`Game Created!`, toastProps);
+
+  if (status === 8) return toast.warn(`Game Ended!`, toastProps);
 };

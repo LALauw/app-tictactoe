@@ -9,6 +9,8 @@ import GameBoard from "./components/GameBoard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { RenderToast } from "./util/RenderToast";
+import axios from "axios";
+import { queryClient } from "./main";
 
 function App() {
   const [challengedPlayer, setChallengedPlayer] = useState("");
@@ -46,9 +48,22 @@ function App() {
         const newBoard: any = await SuiProvider.getObject(
           resData.effects.created[0].reference.objectId
         );
-        setBoard(newBoard.details?.data.fields);
+        const gameCreateRes = await axios.post(
+          `${import.meta.env.VITE_API_URL as string}/createGame`,
+          {
+            game_id: resData.effects.created[0].reference.objectId,
+          }
+        );
+        if (gameCreateRes.data.status === "success") {
+          {
+            queryClient.refetchQueries("PlayerGames");
+            setBoard(newBoard.details?.data.fields);
 
-        RenderToast(7);
+            RenderToast(7);
+          }
+        } else {
+          RenderToast(5);
+        }
       }
     } catch (e) {
       console.error("Game Creation failed", e);
