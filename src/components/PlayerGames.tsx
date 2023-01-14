@@ -1,17 +1,7 @@
-import { useEffect, useState } from "react";
-import {
-  GetObjectDataResponse,
-  JsonRpcProvider,
-  Network,
-  SuiEventEnvelope,
-  SuiEventFilter,
-  SuiMoveObject,
-  SuiObject,
-  TransactionQuery,
-} from "@mysten/sui.js";
+import { JsonRpcProvider, Network, TransactionQuery } from "@mysten/sui.js";
 import { useWallet } from "@suiet/wallet-kit";
+import { useEffect } from "react";
 import Board from "../interfaces/Board";
-import GameTable from "./GameTable";
 import { useBoardStore } from "../store/store";
 import FinishedGamesTable from "./FinishedGamesTable";
 import OngoingGamesTable from "./OngoingGamesTable";
@@ -30,6 +20,15 @@ const PlayerGames = () => {
       function: "create_game",
     },
   };
+
+  useEffect(() => {
+    console.log("Fetching games");
+    if (wallet.connected) {
+      setGames([]);
+      setFinishedGames([]);
+      fetchGames();
+    }
+  }, [wallet.connected]);
 
   async function fetchGames() {
     let transactions = [];

@@ -1,8 +1,9 @@
 import { useWallet } from "@suiet/wallet-kit";
 import Board from "../interfaces/Board";
 import { useBoardStore } from "../store/store";
+import { GamesStatusOption } from "../util/GameStatusOption";
 
-const GameStatus = (game: Board, user: string) => {
+const Result = (game: Board, user: string, status: GamesStatusOption) => {
   if (game.game_status === 1 && user === game.x_address) {
     return "Win";
   }
@@ -29,7 +30,8 @@ const FinishedGamesTable = () => {
   const wallet = useWallet();
   const board = useBoardStore((state) => state.board);
   const setBoard = useBoardStore((state) => state.setBoard);
-  const setWinner = useBoardStore((state) => state.setWinner);
+  const setGameStatus = useBoardStore((state) => state.setGameStatus);
+  const gamestatus = useBoardStore((state) => state.gamestatus);
 
   return (
     <>
@@ -49,7 +51,7 @@ const FinishedGamesTable = () => {
             <tr key={index}>
               <td>{index}</td>
               <td>{game.id?.id}</td>
-              <td>{GameStatus(game, wallet.account?.address!)}</td>
+              <td>{Result(game, wallet.account?.address!, gamestatus)}</td>
               <td>
                 {wallet.account?.address === game.o_address
                   ? "You"
@@ -67,7 +69,13 @@ const FinishedGamesTable = () => {
                   <button
                     onClick={() => {
                       setBoard(game);
-                      setWinner(false);
+                      setGameStatus(
+                        game.game_status === 1
+                          ? "XWin"
+                          : game.game_status === 2
+                          ? "OWin"
+                          : "Draw"
+                      );
                     }}
                     className="btn btn-primary btn-sm"
                   >

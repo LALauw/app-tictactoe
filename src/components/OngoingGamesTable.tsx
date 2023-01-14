@@ -8,7 +8,7 @@ const OngoingGamesTable = () => {
   const wallet = useWallet();
   const board = useBoardStore((state) => state.board);
   const setBoard = useBoardStore((state) => state.setBoard);
-  const setWinner = useBoardStore((state) => state.setWinner);
+  const setGameStatus = useBoardStore((state) => state.setGameStatus);
 
   return (
     <>
@@ -46,7 +46,7 @@ const OngoingGamesTable = () => {
                   <button
                     onClick={() => {
                       setBoard(game);
-                      setWinner(false);
+                      setGameStatus("Ongoing");
                     }}
                     className="btn btn-primary btn-sm"
                   >
