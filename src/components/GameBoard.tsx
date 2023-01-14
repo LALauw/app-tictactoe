@@ -3,18 +3,15 @@ import Board from "../interfaces/Board";
 import { useBoardStore } from "../store/store";
 import TileRenderer from "./TileRenderer";
 import TurnCalc from "./TurnCalc";
-import useWindowSize from "react-use/lib/useWindowSize";
-import Confetti from "react-confetti";
 import { RenderToast } from "../util/RenderToast";
 import { GamesStatusOption } from "../util/GameStatusOption";
+import { queryClient } from "../main";
 
 const GameBoard = () => {
   const wallet = useWallet();
   const board = useBoardStore((state) => state.board);
   const setGameStatus = useBoardStore((state) => state.setGameStatus);
-  const gamestatus = useBoardStore((state) => state.gamestatus);
   const updateBoard = useBoardStore((state) => state.updateBoard);
-  const { width, height } = useWindowSize();
 
   async function handleMarkPlacement(place: number[]) {
     if (!wallet.connected) return;
@@ -66,35 +63,33 @@ const GameBoard = () => {
   if (board.gameboard) {
     return (
       <>
-        {(board.x_address === wallet.account?.address &&
-          gamestatus === "XWin") ||
-          (board.o_address === wallet.account?.address && "OWin" && (
-            <Confetti width={width - 50} height={height - 50} recycle={false} />
-          ))}
-        <div className="flex gap-1">
-          {board.gameboard?.map((row, i) => {
-            return (
-              <div key={i} className=" flex flex-col gap-1">
-                {row.map((col, j) => {
-                  return (
-                    <TileRenderer
-                      placeMarker={handleMarkPlacement}
-                      key={j}
-                      place={[i, j]}
-                      number={col}
-                    />
-                  );
-                })}
-              </div>
-            );
-          })}
+        <div className="flex flex-col items-center justify-center gap-4 text-center w-full">
+          <h1 className="font-bold w-1/2 lg:w-full truncate">{board.id?.id}</h1>
+          <div className="flex gap-1">
+            {board.gameboard?.map((row, i) => {
+              return (
+                <div key={i} className=" flex flex-col gap-1">
+                  {row.map((col, j) => {
+                    return (
+                      <TileRenderer
+                        placeMarker={handleMarkPlacement}
+                        key={j}
+                        place={[i, j]}
+                        number={col}
+                      />
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </div>
+          <button
+            className="btn btn-accent"
+            onClick={() => updateBoard(board.id?.id!)}
+          >
+            Update Board
+          </button>
         </div>
-        <button
-          className="btn btn-accent"
-          onClick={() => updateBoard(board.id?.id!)}
-        >
-          Update Board
-        </button>
       </>
     );
   }
