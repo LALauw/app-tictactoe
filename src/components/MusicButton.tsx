@@ -2,7 +2,7 @@ import { useState } from "react";
 import { bgMusic } from "../util/SoundEffects";
 
 const MusicButton = () => {
-  const [playing, setPlaying] = useState(false);
+  const [playing, setPlaying] = useState(true);
 
   const toggleMusic = () => {
     if (playing) {
