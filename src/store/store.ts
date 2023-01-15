@@ -38,6 +38,15 @@ export const useBoardStore = create<State & Actions>((set) => ({
     const updatedBoard = await SuiProvider.getObject(boardId);
     //@ts-ignore
     const newBoard: Board = updatedBoard.details?.data.fields;
+    if (newBoard.game_status === 1) {
+      set({ gamestatus: "XWin" });
+    }
+    if (newBoard.game_status === 2) {
+      set({ gamestatus: "OWin" });
+    }
+    if (newBoard.game_status === 3) {
+      set({ gamestatus: "Draw" });
+    }
     set({ board: newBoard });
     return newBoard;
   },
