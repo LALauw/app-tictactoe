@@ -1,11 +1,9 @@
 import { create } from "zustand";
 import Board from "../interfaces/Board";
-import WinnerObject from "../interfaces/WinnerObject";
 import { GamesStatusOption } from "../util/GameStatusOption";
 import SuiProvider from "../util/SuiProvider";
 
 type State = {
-  leaderboard: WinnerObject[];
   gamestatus: GamesStatusOption;
   games: Board[];
   finishedGames: Board[];
@@ -14,7 +12,6 @@ type State = {
 };
 
 type Actions = {
-  setLeaderboard: (newLeaderboard: WinnerObject[]) => void;
   setGameStatus: (status: GamesStatusOption) => void;
   setBoard: (board: Board) => void;
   setGames: (games: Board[]) => void;
@@ -24,14 +21,11 @@ type Actions = {
 };
 
 export const useBoardStore = create<State & Actions>((set) => ({
-  leaderboard: [],
   gamestatus: "Ongoing",
   finishedGames: [],
   games: [],
   board: {},
   fetchingGames: false,
-  setLeaderboard: (newLeaderboard: WinnerObject[]) =>
-    set((state) => ({ leaderboard: newLeaderboard })),
   setGameStatus: (status: GamesStatusOption) =>
     set((state) => ({ gamestatus: status })),
   setFetchingGames: (status: boolean) =>
@@ -44,6 +38,15 @@ export const useBoardStore = create<State & Actions>((set) => ({
     const updatedBoard = await SuiProvider.getObject(boardId);
     //@ts-ignore
     const newBoard: Board = updatedBoard.details?.data.fields;
+    if (newBoard.game_status === 1) {
+      set({ gamestatus: "XWin" });
+    }
+    if (newBoard.game_status === 2) {
+      set({ gamestatus: "OWin" });
+    }
+    if (newBoard.game_status === 3) {
+      set({ gamestatus: "Draw" });
+    }
     set({ board: newBoard });
     return newBoard;
   },

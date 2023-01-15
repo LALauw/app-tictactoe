@@ -6,6 +6,7 @@ import { useBoardStore } from "../store/store";
 import FetchPlayerGamesv2 from "../util/FetchPlayerGamesv2";
 import { GamesStatusOption } from "../util/GameStatusOption";
 import { RenderToast } from "../util/RenderToast";
+import { popSound, whooshSound } from "../util/SoundEffects";
 import provider from "../util/SuiProvider";
 
 const Result = (game: Board, user: string, status: GamesStatusOption) => {
@@ -103,6 +104,8 @@ const FinishedGamesTable = () => {
                       </button>
                     ) : (
                       <button
+                        onMouseEnter={() => popSound.play()}
+                        onMouseDown={() => whooshSound.play()}
                         onClick={async () => {
                           const objectData: any = await provider.getObject(
                             game.game_id

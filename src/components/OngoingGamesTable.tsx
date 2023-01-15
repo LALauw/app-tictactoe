@@ -4,6 +4,7 @@ import Board from "../interfaces/Board";
 import GameObject from "../interfaces/GameObject";
 import { useBoardStore } from "../store/store";
 import FetchPlayerGamesv2 from "../util/FetchPlayerGamesv2";
+import { popSound, whooshSound } from "../util/SoundEffects";
 import provider from "../util/SuiProvider";
 import TurnCalc from "./TurnCalc";
 
@@ -79,6 +80,8 @@ const OngoingGamesTable = () => {
                       </button>
                     ) : (
                       <button
+                        onMouseEnter={() => popSound.play()}
+                        onMouseDown={() => whooshSound.play()}
                         onClick={async () => {
                           const objectData: any = await provider.getObject(
                             game.game_id
