@@ -1,13 +1,15 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import provider from "./util/Provider";
-import GameObject from "./util/GameObject";
+import GameObject from "./interfaces/GameObject";
 import cron from "node-cron";
 import fetchGamesByUser from "./fetchGamesByUser";
 import cors from "cors";
-import Board from "./util/Board";
+import Board from "./interfaces/Board";
 import createGame from "./createGame";
 import fetchGamesFromBlockchain from "./fetchGamesFromBlockchain";
+import updateLeaderboard from "./updateLeaderboard";
+import fetchLeaderboard from "./fetchLeaderboard";
 
 let corsOptions = {
   origin: ["http://127.0.0.1:5173/"],
@@ -23,6 +25,7 @@ const port = process.env.PORT;
 
 cron.schedule("*/30 * * * * *", function () {
   fetchGamesFromBlockchain();
+  updateLeaderboard();
 });
 
 app.get("/", (req: Request, res: Response) => {
@@ -35,6 +38,20 @@ app.get(
   async (req: Request, res: Response) => {
     const userGames: GameObject[] = await fetchGamesByUser(req.params.id);
     res.status(200).json(userGames);
+  }
+);
+
+app.get(
+  "/getLeaderboard",
+  cors(corsOptions),
+  async (req: Request, res: Response) => {
+    try {
+      const leaderboard = await fetchLeaderboard();
+      res.status(200).json(leaderboard);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
   }
 );
 
