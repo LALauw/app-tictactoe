@@ -5,7 +5,7 @@ import TileRenderer from "./TileRenderer";
 import TurnCalc from "./TurnCalc";
 import { RenderToast } from "../util/RenderToast";
 import { GamesStatusOption } from "../util/GameStatusOption";
-import { queryClient } from "../main";
+import { successSound, winSound } from "../util/SoundEffects";
 
 const GameBoard = () => {
   const wallet = useWallet();
@@ -41,6 +41,7 @@ const GameBoard = () => {
         });
 
         if (resData.effects.status.status === "success") {
+          successSound.play();
           const newBoard = await updateBoard(board.id?.id!);
           if (!newBoard) return;
           else {
@@ -107,6 +108,7 @@ const GameBoard = () => {
 
 const decideWinner = (board: Board, wallet: string) => {
   if (board.game_status === 1 && board.x_address === wallet) {
+    winSound.play();
     RenderToast(1);
     return "XWin";
   }
@@ -122,6 +124,7 @@ const decideWinner = (board: Board, wallet: string) => {
   }
 
   if (board.game_status === 2 && board.o_address === wallet) {
+    winSound.play();
     RenderToast(1);
     return "OWin";
   }
