@@ -1,4 +1,5 @@
 import { useBoardStore } from "../store/store";
+import { popSound, whooshSound } from "../util/SoundEffects";
 
 const TileRenderer = ({
   placeMarker,
@@ -13,6 +14,8 @@ const TileRenderer = ({
   if (number === 2) {
     return (
       <div
+        onMouseEnter={() => popSound.play()}
+        onMouseDown={() => whooshSound.play()}
         onClick={() => placeMarker(place)}
         className={`btn btn-accent ${
           gamestatus === "Ongoing" ? "" : "btn-disabled"

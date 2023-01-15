@@ -13,8 +13,13 @@ datasource db {
 model Game {
   game_id        String      @id
   createdAt DateTime @default(now())
-x_address   String
+  x_address   String
   o_address   String
-  game_status    Int
+  game_status Int
   cur_turn  Int
+}
+
+model Highscore {
+  player_address String @id
+  wins Int
 }

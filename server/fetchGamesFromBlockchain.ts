@@ -1,6 +1,6 @@
 import { TransactionQuery } from "@mysten/sui.js";
 import storeGames from "./storeGames";
-import GameObject from "./util/GameObject";
+import GameObject from "./interfaces/GameObject";
 import provider from "./util/Provider";
 
 const fetchGamesFromBlockchain = async () => {

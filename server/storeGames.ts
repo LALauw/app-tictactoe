@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import GameObject from "./util/GameObject";
+import GameObject from "./interfaces/GameObject";
 
 const prisma = new PrismaClient();
 
